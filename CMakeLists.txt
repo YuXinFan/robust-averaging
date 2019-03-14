@@ -31,7 +31,7 @@ test_median(0 SORTED)
 # TODO: add your implementation into CTest cases. We have perpared `test_median`
 #   helper function for you:
 #
-#   test_median(method_idx, method_name)
+#   test_median(method_idx method_name)
 #
 #   Arguments:
 #     - method_idx (int): specify the index of your method in `main` function,
@@ -40,6 +40,6 @@ test_median(0 SORTED)
 #           used as subfix of CTest executables;
 #
 #   Examples:
-#     test_median(1, QUICK_SELECT)
+#     test_median(1 QUICK_SELECT)
 
-test_median(1, QUICK_SELECT)
+test_median(1 QUICK_SELECT)

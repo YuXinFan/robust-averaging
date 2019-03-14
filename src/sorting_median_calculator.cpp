@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "sorting_median_calculator.hpp"
 
 SortingMedianCalculator::SortingMedianCalculator() {}
