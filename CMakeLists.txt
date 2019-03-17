@@ -17,6 +17,8 @@ INCLUDE_DIRECTORIES(include)
 
 set( MEDIANCALCULATORS_SRC src/median_calculator_base.cpp
                            src/sorting_median_calculator.cpp
+                           src/quick_select_median_calculator.cpp
+                           src/bin_median_calculator.cpp
                            src/lap_timer.cpp )
 add_library( median_calculators ${MEDIANCALCULATORS_SRC} )
 
@@ -43,3 +45,4 @@ test_median(0 SORTED)
 #     test_median(1 QUICK_SELECT)
 
 test_median(1 QUICK_SELECT)
+test_median(2 BIN_MEDIAN)
