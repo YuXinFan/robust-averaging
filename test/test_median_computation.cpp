@@ -7,6 +7,7 @@
 #include "sorting_median_calculator.hpp"
 #include "quick_select_median_calculator.hpp"
 #include "bin_median_calculator.hpp"
+#include "randomized_median_calculator.hpp"
 
 int main(int argc, char **argv) {
   // Get index of median calculator
@@ -30,6 +31,9 @@ int main(int argc, char **argv) {
       break;
     case 2: // binmedian calculator
       calc = new BinMedianCalculator();
+      break;
+    case 3: // randomized median calculator
+      calc = new RandomizedMedianCalculator();
       break;
     default:
       std::cout << "Error: the requested median calculator has not yet been implemented\n";

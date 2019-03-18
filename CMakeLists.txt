@@ -16,6 +16,7 @@ include(CTest)
 INCLUDE_DIRECTORIES(include)
 
 set( MEDIANCALCULATORS_SRC src/median_calculator_base.cpp
+                           src/randomized_median_calculator.cpp
                            src/sorting_median_calculator.cpp
                            src/quick_select_median_calculator.cpp
                            src/bin_median_calculator.cpp
@@ -45,4 +46,5 @@ test_median(0 SORTED)
 #     test_median(1 QUICK_SELECT)
 
 test_median(1 QUICK_SELECT)
-test_median(2 BIN_MEDIAN)
+#test_median(2 BIN_MEDIAN)
+test_median(3 RANDOM_ALGORITHM)
