@@ -11,10 +11,6 @@ class QuickSelectMedianCalculator: public MedianCalculatorBase {
 
     virtual float median(std::vector<float> & set);
     virtual float quickSelect(std::vector<float> &set, int k);
-    /*
-    **help function
-    */
-    virtual void printVector(std::vector<float> &set);
 
 };
 

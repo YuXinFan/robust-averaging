@@ -9,7 +9,6 @@ class RandomizedMedianCalculator : public MedianCalculatorBase {
   virtual ~RandomizedMedianCalculator();
 
   virtual float median( std::vector<float> &set );
-  virtual void printVector( std::vector<float> &set);
 };
 
 #endif 

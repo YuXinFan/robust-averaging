@@ -10,7 +10,6 @@ class BinMedianCalculator: public MedianCalculatorBase{
 
     virtual float median( std::vector<float> &set );
 
-    virtual void printVector( std::vector<float> &set );
     virtual float findNthNumberWithBand( std::vector<float> &set, int k, float left_band, float right_band);
 };
 
