@@ -3,6 +3,7 @@
 #include <iostream>
 #include <numeric>
 #include <algorithm>
+
 #include <cmath>
 
 
@@ -11,9 +12,11 @@ BinMedianCalculator::~BinMedianCalculator() {}
 
 float
 BinMedianCalculator::median( std::vector<float> &set ) {
-  int k = 10; 
   auto n = set.size();
-  std::cout << "size = " << set.size() << std::endl;
+  int i1 = (n + 1)/2;
+  int i2 = (n+2)/2;
+  int k = 100; 
+
   // compute mean of set 
   float sum = std::accumulate( set.begin(), set.end(), 0.f);
   float mean = sum / n;
@@ -34,101 +37,66 @@ BinMedianCalculator::median( std::vector<float> &set ) {
   }
  
 
-  int smaller_than_left_band = 0 , greater_than_right_band = 0;
-
-  auto bin_region = std::vector<float>();
-  float factor = k / (2 * sigma);
-  float step = ( 2 * sigma ) / k;
-  auto bins_count = std::vector<int>( k , 0);
-  int bin; // whick bin we are operating
+  int smaller_than_left_band = 0;
+  auto subset_bins = std::vector<float>();
   for ( auto num : set ) {
     if ( num < left_band ) {
       smaller_than_left_band++;
-    } else if ( num > right_band ) {
-      greater_than_right_band++;
-    } else {  
-      bin = ( int ) ( ( num - left_band ) * factor );
-      bins_count[bin]++;
-      bin_region.push_back( num );
+    } else if ( num <= right_band ) {
+      subset_bins.push_back( num );
     }
   }
+  float val_i1 = findNthNumberWithBand(subset_bins, i1-smaller_than_left_band, left_band, right_band);
+  float val_i2 = findNthNumberWithBand(subset_bins, i2-smaller_than_left_band, left_band, right_band);
+  return ( val_i1 + val_i2 ) / 2.f;
+}
 
-
-  if ( n % 2 == 0 ) {
-
-    auto i1 = ( n + 1 ) / 2 , i2 = ( n + 2 ) / 2;
-    int bin_i1 = smaller_than_left_band;
-    for ( auto i = 0; i <= k; i++ ) {
-      bin_i1 += bins_count[i];
-      if ( bin_i1 >= i1) {
-        i1 = i1 - ( bin_i1 - bins_count[i] );
-        bin_i1 = i;
-        break;
-        }
-    }
-    int bin_i2 = smaller_than_left_band;
-    for ( auto i = 0; i <= k; i++ ) {
-      bin_i2 += bins_count[i];
-        if ( bin_i2 >= i2) {
-          i2 = i2 - ( bin_i2 - bins_count[i] );
-          bin_i2 = i;
-          break;
-       }
-     }     
-    
-    std::cout << bin_i1 << ":"<< bin_i2 <<std::endl;
-    
+float BinMedianCalculator::findNthNumberWithBand( std::vector<float> &set , int k, float left_band, float right_band)
+{
+  int bin_number; int K = 100;
+  float bin_length = ( right_band - left_band ) / K; 
+  auto bin_number_counts = std::vector<int>(K, 0);
+  for ( auto num : set) {
+    bin_number = (int)( (num - left_band) / bin_length);
+    bin_number_counts[bin_number]++;
   }
+ 
+  std::cout << k << std::endl;
+  int count = 0; int bin_of_kth;
+  for ( int i = 0; i < K; i++) {
+    count += bin_number_counts[i];
+    if (count >= k) {
+      k = k-(count-bin_number_counts[i]);
+      bin_of_kth = i;
+      break;
+    }
+  }
+ 
+  int left_number_count = 0;
+  float tight_left_band = left_band + bin_of_kth * bin_length;
+  float tight_right_band = tight_left_band + bin_length;
+  auto bin_set = std::vector<float>();
+  for ( auto num : set) {
+    if ( num < tight_left_band) {
+      left_number_count++;
+    }else if ( num <= tight_right_band ) {
+      bin_set.push_back(num);
+    }
+  }
+  //printVector(set);
+  // printVector(bin_set);
+  // std::cout << "k="<<k<<", bin_len="<<bin_length<<std::endl;
+  // std::cout << "band=["<<left_band <<","<<right_band<<"]"<<std::endl;
+  // std::cout << "tight band=["<<tight_left_band <<","<<tight_right_band<<"]"<<std::endl;
+  if (bin_set.size() < 10) {
+    std::sort(bin_set.begin(), bin_set.end());
+    //return 0.f;
+    return bin_set[k-1];
+  } else {
+    return findNthNumberWithBand(bin_set, k, tight_left_band, tight_right_band);
+  }
+
   return 0.f;
-  // decide median position
-  if ( n & 1 ) {   // when size is odd
-    auto position = ( n + 1 ) / 2;
-    int median_bin = smaller_than_left_band;
-    for ( auto i = 0; i <= k; i++) {
-      median_bin += bins_count[i];
-      if (median_bin >= position) {
-        position = position - (median_bin - bins_count[i]);
-        median_bin = i;
-        break;
-      }
-    }
-    
-    float median_left_band = left_band + ( median_bin )* step ;
-    float median_right_band = median_left_band + step;
-  
-
-    //test 
-    std::cout << "size = " << set.size() << ",["<<left_band <<","<<right_band << "]"<<std::endl;
-    printVector(set); 
-    std::cout << "smaller numer = " << smaller_than_left_band << std::endl;
-    std::cout << "bin id = " << median_bin <<std::endl;
-    std::cout << "step = " << step << std::endl;
-    std::cout<< "median_left_band = " << median_left_band << ", median_right_band = " << median_right_band<< std::endl; 
-    
-    std::cout << "vector :";
-    for (auto i : bins_count) {
-      std::cout << i << " ";
-    }
-    std::cout << std::endl;
-
-    //end
-    return 2.f ;
-  }
-  if ( n & 0) {
-    return 2.f ;
-  }
-  
-
-
-  if ( bin_region.size() <= 1 ) {
-    return bin_region[0];
-  }else if ( bin_region.size() < 10) {
-    auto sorted_subset(bin_region);
-    std::sort( sorted_subset.begin(), sorted_subset.end() );
-    return 2.f;
-  }else {
-    return 2.f; // not right?
-  }
 }
 
 void BinMedianCalculator::printVector( std::vector<float> &set ) {
@@ -138,3 +106,4 @@ void BinMedianCalculator::printVector( std::vector<float> &set ) {
   }
   std::cout << std::endl;
 }
+

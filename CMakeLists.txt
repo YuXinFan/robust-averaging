@@ -46,5 +46,5 @@ test_median(0 SORTED)
 #     test_median(1 QUICK_SELECT)
 
 test_median(1 QUICK_SELECT)
-#test_median(2 BIN_MEDIAN)
+test_median(2 BIN_MEDIAN)
 test_median(3 RANDOM_ALGORITHM)
